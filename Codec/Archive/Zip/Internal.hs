@@ -831,6 +831,7 @@ locateECD path h = sizeCheck
   where
 
     sizeCheck = do
+      putStrLn "locateECD sizeCheck"
       fsize    <- hFileSize h
       let limit = max 0 (fsize - 0xffff - 22)
       if fsize < 22
@@ -838,6 +839,7 @@ locateECD path h = sizeCheck
         else hSeek h SeekFromEnd (-22) >> loop limit
 
     loop limit = do
+      putStrLn "locateECD loop limit"
       sig <- getNum getWord32le 4
       pos <- subtract 4 <$> hTell h
       let again = hSeek h AbsoluteSeek (pos - 1) >> loop limit
@@ -854,6 +856,7 @@ locateECD path h = sizeCheck
         else bool again (return Nothing) done
 
     checkComment pos = do
+      putStrLn "locateECD checkComment"
       size <- hFileSize h
       hSeek h AbsoluteSeek (pos + 20)
       l <- fromIntegral <$> getNum getWord16le 2
@@ -862,6 +865,7 @@ locateECD path h = sizeCheck
         else Nothing
 
     checkCDSig pos = do
+      putStrLn "locateECD checkCDSig"
       hSeek h AbsoluteSeek (pos + 16)
       sigPos <- fromIntegral <$> getNum getWord32le 4
       if sigPos == 0xffffffff -- Zip64 is probably used
@@ -882,6 +886,7 @@ locateECD path h = sizeCheck
       if pos < 20
         then return (Just pos)
         else do
+          putStrLn "locateECD checkZip64"
           hSeek h AbsoluteSeek (pos - 20)
           zip64locatorSig <- getNum getWord32le 4
           if zip64locatorSig == 0x07064b50
@@ -891,6 +896,7 @@ locateECD path h = sizeCheck
             else return (Just pos)
 
     getNum f n = do
+      putStrLn "locateECD getNum"
       result <- runGet f <$> B.hGet h n
       case result of
         Left msg -> throwM (ParsingFailed path msg)

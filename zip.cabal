@@ -92,6 +92,7 @@ executable haskell-zip-app
   hs-source-dirs:     bench-app
   build-depends:      base             >= 4.7 && < 5.0
                     , filepath         >= 1.2 && < 1.5
+                    , containers
                     , zip
   if flag(dev)
     ghc-options:      -Wall -Werror -Wcompat

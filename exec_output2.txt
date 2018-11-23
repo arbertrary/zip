@@ -1,0 +1,12 @@
+locateECD sizeCheck
+locateECD loop limit
+locateECD getNum
+locateECD checkComment
+locateECD getNum
+locateECD checkCDSig
+locateECD getNum
+locateECD getNum
+locateECD checkZip64
+locateECD getNum
+"testfile"
+test
