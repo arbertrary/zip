@@ -1,4 +1,4 @@
-# successful extraction
+# unsuccessful extraction
 locateECD sizeCheck
 locateECD loop limit
 locateECD getNum
@@ -7,7 +7,9 @@ locateECD getNum
 locateECD checkCDSig
 locateECD getNum
 locateECD getNum
-locateECD checkZip64
+locateECD loop limit
 locateECD getNum
-"testfile"
-test
+locateECD loop limit
+locateECD getNum
+locateECD loop limit
+# ... looping till abort

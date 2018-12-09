@@ -833,6 +833,7 @@ locateECD path h = sizeCheck
     sizeCheck = do
       putStrLn "locateECD sizeCheck"
       fsize    <- hFileSize h
+      print fsize
       let limit = max 0 (fsize - 0xffff - 22)
       if fsize < 22
         then return Nothing
