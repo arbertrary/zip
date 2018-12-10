@@ -10,13 +10,13 @@ import System.FilePath
 
 main :: IO ()
 main = do
-  let executable = "self-extracting-zip_test"
+  print "Start:"
+  -- let executable = "self-extracting-zip"
   -- let executable = "testfile.zip"
-  -- executable <- getArgs
+  args <- getArgs
   -- status <- withFile executable ReadMode hLookAhead
-  entries <- withArchive executable getEntries
+  entries <- withArchive (head args) getEntries
   mapM_ print $ keys entries
-  putStrLn "test"
 -- main = do
 --   [operation, input, output] <- getArgs
 --   case operation of

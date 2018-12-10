@@ -843,17 +843,22 @@ locateECD path h = sizeCheck
       putStrLn "locateECD loop limit"
       sig <- getNum getWord32le 4
       pos <- subtract 4 <$> hTell h
-      let again = hSeek h AbsoluteSeek (pos - 1) >> loop limit
+      let again = print "again" >> hSeek h AbsoluteSeek (pos - 1) >> loop limit
           done  = pos <= limit
       if sig == 0x06054b50
         then do
+          print "found EOCD sig"
           result <- runMaybeT $
             MaybeT (checkComment pos) >>=
             MaybeT . checkCDSig       >>=
             MaybeT . checkZip64
           case result of
-            Nothing -> bool again (return Nothing) done
-            Just ecd -> return (Just ecd)
+            Nothing -> do
+              print "Nothing"
+              bool again (return Nothing) done
+            Just ecd -> do
+              print "Something"
+              return (Just ecd)
         else bool again (return Nothing) done
 
     checkComment pos = do
@@ -874,6 +879,8 @@ locateECD path h = sizeCheck
         else do
           hSeek h AbsoluteSeek sigPos
           cdSig  <- getNum getWord32le 4
+          print "cdSig"
+          print cdSig
           return $ if cdSig == 0x02014b50 ||
             -- ↑ normal case: central directory file header signature
                       cdSig == 0x06064b50 ||
@@ -901,7 +908,10 @@ locateECD path h = sizeCheck
       result <- runGet f <$> B.hGet h n
       case result of
         Left msg -> throwM (ParsingFailed path msg)
-        Right val -> return val
+        Right val -> do
+          print "val:"
+          print val
+          return val
 
 ----------------------------------------------------------------------------
 -- Helpers
